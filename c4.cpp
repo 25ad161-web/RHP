@@ -8,12 +8,12 @@ long long maximumValue(vector<vector<int>>& grid) {
 
     vector<vector<long long>> dp(R, vector<long long>(C, 0));
 
-    // First row
+   
     for (int col = 0; col < C; col++) {
         dp[0][col] = grid[0][col];
     }
 
-    // Fill DP table row-wise
+   
     for (int row = 1; row < R; row++) {
 
         for (int col = 0; col < C; col++) {
@@ -22,7 +22,7 @@ long long maximumValue(vector<vector<int>>& grid) {
 
             for (int prevCol = 0; prevCol < C; prevCol++) {
 
-                if (prevCol != col) { // cannot choose same column
+                if (prevCol != col) { 
                     best = max(best, dp[row - 1][prevCol]);
                 }
             }
