@@ -20,7 +20,7 @@ long long maximumValue(vector<vector<int>>& grid) {
 
             for (int prevRow = 0; prevRow < R; prevRow++) {
 
-                if (prevRow != row) { // cannot choose same row
+                if (prevRow != row) { 
                     best = max(best, dp[prevRow][col - 1]);
                 }
             }
