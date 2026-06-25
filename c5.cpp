@@ -1,57 +1,61 @@
-class Solution {
-public:
+#include <bits/stdc++.h>
+using namespace std;
 
-    vector<long long> getFMax(vector<vector<long long>>& dp, int col, int R) {
+long long maximumValue(vector<vector<int>>& grid) {
 
-        long long max1 = LLONG_MIN;
-        long long max2 = LLONG_MIN;
+    int R = grid.size();
+    int C = grid[0].size();
 
-        for(int row = 0; row < R; row++) {
+    vector<vector<long long>> dp(R, vector<long long>(C, 0));
 
-            if(dp[row][col] > max1) {
-                max2 = max1;
-                max1 = dp[row][col];
-            }
-            else if(dp[row][col] > max2) {
-                max2 = dp[row][col];
-            }
-        }
-
-        return {max1, max2};
+    for (int row = 0; row < R; row++) {
+        dp[row][0] = grid[row][0];
     }
 
-    long long maximumValue(vector<vector<int>>& grid) {
+    for (int col = 1; col < C; col++) {
 
-        int R = grid.size();
-        int C = grid[0].size();
+        for (int row = 0; row < R; row++) {
 
-        vector<vector<long long>> dp(R, vector<long long>(C, 0));
+            long long best = LLONG_MIN;
 
-        // First column
-        for(int row = 0; row < R; row++) {
-            dp[row][0] = grid[row][0];
-        }
+            for (int prevRow = 0; prevRow < R; prevRow++) {
 
-        // Remaining columns
-        for(int col = 1; col < C; col++) {
-
-            vector<long long> fmax = getFMax(dp, col - 1, R);
-
-            for(int row = 0; row < R; row++) {
-
-                if(dp[row][col - 1] == fmax[0])
-                    dp[row][col] = fmax[1] + grid[row][col];
-                else
-                    dp[row][col] = fmax[0] + grid[row][col];
+                if (prevRow != row) { // cannot choose same row
+                    best = max(best, dp[prevRow][col - 1]);
+                }
             }
+
+            dp[row][col] = best + grid[row][col];
         }
-
-        long long ans = LLONG_MIN;
-
-        for(int row = 0; row < R; row++) {
-            ans = max(ans, dp[row][C - 1]);
-        }
-
-        return ans;
     }
-};
+
+    long long ans = LLONG_MIN;
+
+    for (int row = 0; row < R; row++) {
+        ans = max(ans, dp[row][C - 1]);
+    }
+
+    return ans;
+}
+
+int main() {
+
+    int R, C;
+
+    cout << "Enter rows and columns: ";
+    cin >> R >> C;
+
+    vector<vector<int>> grid(R, vector<int>(C));
+
+    cout << "Enter matrix elements:\n";
+
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            cin >> grid[i][j];
+        }
+    }
+
+    cout << "Maximum Value = " << maximumValue(grid);
+
+    return 0;
+}
